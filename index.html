@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Analyzer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Styles for Animations -->
+    <style>
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-6">
+    <div class="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-lg animate-fadeIn">
+        <h1 class="text-3xl font-bold text-center mb-6">Sentence Analyzer</h1>
+        <p class="text-gray-300 mb-4 text-center">Enter a sentence ending with a period (e.g., "Hello world."):</p>
+        <input type="text" id="sentenceInput" placeholder="Type your sentence here..." class="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-green-500 transition-all duration-300 mb-4">
+        <button onclick="analyzeSentence()" class="w-full bg-green-500 text-gray-900 py-3 rounded-lg font-semibold hover:bg-green-400 transition-all duration-300">Analyze</button>
+        <div id="results" class="mt-6 text-gray-300">
+            <p><strong>Length of Sentence:</strong> <span id="charCount">0</span> characters</p>
+            <p><strong>Number of Words:</strong> <span id="wordCount">0</span></p>
+            <p><strong>Number of Vowels:</strong> <span id="vowelCount">0</span></p>
+        </div>
+    </div>
+   
+    <!-- JavaScript for Sentence Analysis -->
+    <script>
+        function analyzeSentence() {
+            // Get the input sentence
+            const sentence = document.getElementById('sentenceInput').value;
+
+            // Validate input (must end with a period)
+            if (!sentence.endsWith('.')) {
+                alert('Please enter a sentence that ends with a period (.).');
+                return;
+            }
+
+            // Initialize counters
+            let charCount = 0;
+            let wordCount = 0;
+            let vowelCount = 0;
+
+            // Define vowels (both lowercase and uppercase)
+            const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
+
+            // Flag to track if we're in a word (for the first word)
+            let inWord = false;
+
+            // Process each character
+            for (let i = 0; i < sentence.length; i++) {
+                const char = sentence[i];
+
+                // Increment character count
+                charCount++;
+
+                // Stop at the period
+                if (char === '.') {
+                    break;
+                }
+
+                // Count vowels
+                if (vowels.includes(char)) {
+                    vowelCount++;
+                }
+
+                // Count words (words are separated by a single space)
+                if (char === ' ') {
+                    if (inWord) {
+                        // If we were in a word, the space marks the end of it
+                        inWord = false;
+                    }
+                } else {
+                    if (!inWord) {
+                        // If we weren't in a word, this character starts a new word
+                        wordCount++;
+                        inWord = true;
+                    }
+                }
+            }
+
+            // Update the results in the UI
+            document.getElementById('charCount').textContent = charCount;
+            document.getElementById('wordCount').textContent = wordCount;
+            document.getElementById('vowelCount').textContent = vowelCount;
+        }
+    </script>
+
+</body>
+</html>
